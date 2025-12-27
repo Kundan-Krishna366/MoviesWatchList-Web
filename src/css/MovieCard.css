@@ -256,3 +256,17 @@
 .movie-card:focus-within {
   box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.3);
 }
+.watch-btn {
+  margin-top: 8px;
+  display: inline-block;
+  padding: 6px 12px;
+  background: #e50914;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.watch-btn:hover {
+  background: #b20710;
+}
