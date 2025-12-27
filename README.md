@@ -1,7 +1,10 @@
 # Movie App
 
-A React-based movie application using **TMDB API** to browse and search movies.  
-Users can **add favourites** and **watch movies via VidSrc**.
+A React-based movie application using TMDB API to browse and search movies.  
+Users can add favourites and watch movies via VidSrc.
+
+## Live Demo
+https://watchonlymovies.netlify.app/
 
 ## Features
 - Popular & search movies
