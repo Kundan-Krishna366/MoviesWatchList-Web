@@ -21,8 +21,14 @@ function MovieCard({ movie }) {
     <div className="movie-card">
       <div className="movie-poster">
         <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          src={
+            movie.poster_path
+              ? `https://image.tmdb.org/t/p/w185${movie.poster_path}`
+              : "/placeholder.png"
+          }
           alt={movie.title}
+          loading="lazy"
+          decoding="async"
         />
 
         <div className="movie-overlay">
@@ -39,9 +45,8 @@ function MovieCard({ movie }) {
         <h3>{movie.title}</h3>
         <p>{movie.release_date?.split("-")[0]}</p>
 
-        {/* WATCH BUTTON */}
         <Link to={`/watch/${movie.id}`} className="watch-btn">
-          ▶ Watch
+          Watch
         </Link>
       </div>
     </div>

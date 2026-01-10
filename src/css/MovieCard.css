@@ -270,3 +270,50 @@
 .watch-btn:hover {
   background: #b20710;
 }
+.movie-card {
+  width: 100%;
+}
+
+.movie-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background-color: #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.favourite-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.favourite-btn.active {
+  color: red;
+}
+
+.watch-btn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: #e50914;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 4px;
+}
