@@ -7,41 +7,57 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    const loadPopularMovies = async () => {
+    const loadMovies = async () => {
       try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies || []);
+        setLoading(true);
+        const data = searchQuery
+          ? await searchMovies(searchQuery, page)
+          : await getPopularMovies(page);
+
+        setMovies((prev) => (page === 1 ? data || [] : [...prev, ...(data || [])]));
+        setHasMore(data && data.length > 0);
+        setError(null);
       } catch (err) {
         console.error(err);
-        setError("Failed to load movies :(");
-        setMovies([]);
+        setError("Failed to load movies");
       } finally {
         setLoading(false);
       }
     };
 
-    loadPopularMovies();
-  }, []);
+    loadMovies();
+  }, [page, searchQuery]);
 
-  const handleSearch = async (e) => {
+  // Infinite scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 200 &&
+        !loading &&
+        hasMore
+      ) {
+        setPage((prev) => prev + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, hasMore]);
+
+  const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    if (loading) return;
 
-    setLoading(true);
-    try {
-      const searchResults = await searchMovies(searchQuery);
-      setMovies(searchResults || []); // ✅ SAFE
-      setError(null);
-    } catch (err) {
-      setError("Failed to search movies :(");
-      setMovies([]);
-    } finally {
-      setLoading(false);
-    }
+    setMovies([]);
+    setPage(1);
+    setHasMore(true);
   };
 
   return (
@@ -61,15 +77,14 @@ function Home() {
 
       {error && <div className="error-message">{error}</div>}
 
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="movies-grid">
-          {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
-        </div>
-      )}
+      <div className="movies-grid">
+        {movies.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
+
+      {loading && <div className="loading">Loading more...</div>}
+      {!hasMore && <div className="loading">No more movies</div>}
     </div>
   );
 }
