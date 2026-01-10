@@ -41,7 +41,6 @@ function Home() {
     loadMovies();
   }, [page, searchQuery]);
 
-  // IntersectionObserver (FIXED FOR MOBILE)
   useEffect(() => {
     if (loading) return;
 
@@ -52,7 +51,7 @@ function Home() {
         }
       },
       {
-        root: containerRef.current, // ✅ THIS FIXES MOBILE
+        root: containerRef.current,
         rootMargin: "200px",
         threshold: 0,
       }
@@ -96,8 +95,6 @@ function Home() {
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
-
-      {/* sentinel */}
       <div ref={loadMoreRef} style={{ height: "1px" }} />
 
       {loading && <div className="loading">Loading more...</div>}
