@@ -1,5 +1,5 @@
 import MovieCard from "../components/MovieCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { searchMovies, getPopularMovies } from "../services/api";
 import "../css/Home.css";
 
@@ -12,15 +12,22 @@ function Home() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  const loadMoreRef = useRef(null);
+
+  // Fetch movies (popular or search)
   useEffect(() => {
     const loadMovies = async () => {
       try {
         setLoading(true);
+
         const data = searchQuery
           ? await searchMovies(searchQuery, page)
           : await getPopularMovies(page);
 
-        setMovies((prev) => (page === 1 ? data || [] : [...prev, ...(data || [])]));
+        setMovies((prev) =>
+          page === 1 ? data || [] : [...prev, ...(data || [])]
+        );
+
         setHasMore(data && data.length > 0);
         setError(null);
       } catch (err) {
@@ -34,23 +41,35 @@ function Home() {
     loadMovies();
   }, [page, searchQuery]);
 
-  // Infinite scroll listener
+  // IntersectionObserver for infinite scroll (mobile-safe)
   useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 200 &&
-        !loading &&
-        hasMore
-      ) {
-        setPage((prev) => prev + 1);
+    if (loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0,
+      }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
       }
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
 
+  // Handle search
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
@@ -83,8 +102,13 @@ function Home() {
         ))}
       </div>
 
+      {/* Observer target */}
+      <div ref={loadMoreRef} style={{ height: "1px" }} />
+
       {loading && <div className="loading">Loading more...</div>}
-      {!hasMore && <div className="loading">No more movies</div>}
+      {!hasMore && !loading && (
+        <div className="loading">No more movies</div>
+      )}
     </div>
   );
 }
