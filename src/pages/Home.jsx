@@ -12,9 +12,10 @@ function Home() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const loadMoreRef = useRef(null);
+  const containerRef = useRef(null);   // 👈 scroll container
+  const loadMoreRef = useRef(null);    // 👈 sentinel
 
-  // Fetch movies (popular or search)
+  // Fetch movies
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -31,7 +32,6 @@ function Home() {
         setHasMore(data && data.length > 0);
         setError(null);
       } catch (err) {
-        console.error(err);
         setError("Failed to load movies");
       } finally {
         setLoading(false);
@@ -41,7 +41,7 @@ function Home() {
     loadMovies();
   }, [page, searchQuery]);
 
-  // IntersectionObserver for infinite scroll (mobile-safe)
+  // IntersectionObserver (FIXED FOR MOBILE)
   useEffect(() => {
     if (loading) return;
 
@@ -52,7 +52,7 @@ function Home() {
         }
       },
       {
-        root: null,
+        root: containerRef.current, // ✅ THIS FIXES MOBILE
         rootMargin: "200px",
         threshold: 0,
       }
@@ -62,14 +62,9 @@ function Home() {
       observer.observe(loadMoreRef.current);
     }
 
-    return () => {
-      if (loadMoreRef.current) {
-        observer.unobserve(loadMoreRef.current);
-      }
-    };
+    return () => observer.disconnect();
   }, [loading, hasMore]);
 
-  // Handle search
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
@@ -80,7 +75,7 @@ function Home() {
   };
 
   return (
-    <div className="home">
+    <div className="home" ref={containerRef}>
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
@@ -102,7 +97,7 @@ function Home() {
         ))}
       </div>
 
-      {/* Observer target */}
+      {/* sentinel */}
       <div ref={loadMoreRef} style={{ height: "1px" }} />
 
       {loading && <div className="loading">Loading more...</div>}
