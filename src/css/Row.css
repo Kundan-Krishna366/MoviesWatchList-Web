@@ -1,0 +1,23 @@
+.row {
+  margin-bottom: 40px;
+}
+
+.row-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: white;
+  padding-left: 4%;
+}
+
+.row-posters {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 0 4% 20px 4%;
+  scroll-behavior: smooth;
+}
+
+.row-posters::-webkit-scrollbar {
+  display: none;
+}

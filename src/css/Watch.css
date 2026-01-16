@@ -1,0 +1,86 @@
+.watch-page {
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+}
+
+.watch-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 4%;
+  height: 80px;
+  background-color: #000;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: white;
+}
+
+.watch-brand {
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.5px;
+}
+
+.watch-brand span {
+  color: var(--primary-green);
+}
+
+.player-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 4%;
+}
+
+.video-wrapper {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow-lg);
+}
+
+.video-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.watch-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.watch-meta {
+  display: flex;
+  gap: 20px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.meta-rating {
+  color: var(--primary-green);
+  font-weight: 700;
+}
+
+.watch-overview {
+  color: #ccc;
+  line-height: 1.6;
+  max-width: 800px;
+  font-size: 1.1rem;
+}

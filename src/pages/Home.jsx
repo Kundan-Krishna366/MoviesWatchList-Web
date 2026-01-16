@@ -1,105 +1,90 @@
+import { useState, useEffect } from "react";
+import { getPopularMovies, getTopRatedMovies, getUpcomingMovies, searchMovies } from "../services/api";
+import { useMovieContext } from "../contexts/MovieContext";
+import Row from "../components/Row";
 import MovieCard from "../components/MovieCard";
-import { useState, useEffect, useRef } from "react";
-import { searchMovies, getPopularMovies } from "../services/api";
 import "../css/Home.css";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { searchQuery, isFavourite, addToFavourites, removeFromFavourites } = useMovieContext();
+  const [featuredMovie, setFeaturedMovie] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate();
 
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-
-  const containerRef = useRef(null);   // 👈 scroll container
-  const loadMoreRef = useRef(null);    // 👈 sentinel
-
-  // Fetch movies
   useEffect(() => {
-    const loadMovies = async () => {
-      try {
-        setLoading(true);
-
-        const data = searchQuery
-          ? await searchMovies(searchQuery, page)
-          : await getPopularMovies(page);
-
-        setMovies((prev) =>
-          page === 1 ? data || [] : [...prev, ...(data || [])]
-        );
-
-        setHasMore(data && data.length > 0);
-        setError(null);
-      } catch (err) {
-        setError("Failed to load movies");
-      } finally {
-        setLoading(false);
+    const loadBanner = async () => {
+      const movies = await getPopularMovies();
+      if (movies && movies.length > 0) {
+        setFeaturedMovie(movies[Math.floor(Math.random() * movies.length)]);
       }
     };
-
-    loadMovies();
-  }, [page, searchQuery]);
+    loadBanner();
+  }, []);
 
   useEffect(() => {
-    if (loading) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPage((prev) => prev + 1);
-        }
-      },
-      {
-        root: containerRef.current,
-        rootMargin: "200px",
-        threshold: 0,
+    const fetchSearch = async () => {
+      if (searchQuery.trim()) {
+        const results = await searchMovies(searchQuery);
+        setSearchResults(results || []);
+      } else {
+        setSearchResults([]);
       }
-    );
+    };
+    fetchSearch();
+  }, [searchQuery]);
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+  const toggleFeaturedFav = () => {
+    if (featuredMovie) {
+        if (isFavourite(featuredMovie.id)) {
+            removeFromFavourites(featuredMovie.id);
+        } else {
+            addToFavourites(featuredMovie);
+        }
     }
-
-    return () => observer.disconnect();
-  }, [loading, hasMore]);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setMovies([]);
-    setPage(1);
-    setHasMore(true);
   };
 
   return (
-    <div className="home" ref={containerRef}>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Search for movies.."
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button className="search-btn" type="submit">
-          Search
-        </button>
-      </form>
+    <div className="home">
+      {!searchQuery && featuredMovie && (
+        <div
+          className="hero-banner"
+          style={{
+            backgroundImage: `url("https://image.tmdb.org/t/p/original${featuredMovie.backdrop_path}")`,
+          }}
+        >
+          <div className="hero-overlay"></div>
+          <div className="hero-content">
+            <h1 className="hero-title">{featuredMovie.title}</h1>
+            <p className="hero-desc">{featuredMovie.overview?.substring(0, 150)}...</p>
+            <div className="hero-btns">
+              <button className="btn-play" onClick={() => navigate(`/watch/${featuredMovie.id}`)}>
+                Play Now
+              </button>
+              <button className="btn-list" onClick={toggleFeaturedFav}>
+                {isFavourite(featuredMovie.id) ? "✓ Added" : "+ My List"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="movies-grid">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
-      <div ref={loadMoreRef} style={{ height: "1px" }} />
-
-      {loading && <div className="loading">Loading more...</div>}
-      {!hasMore && !loading && (
-        <div className="loading">No more movies</div>
+      {searchQuery ? (
+        <div className="search-section">
+          <h2 className="section-title">Results for "{searchQuery}"</h2>
+          <div className="grid-layout">
+            {searchResults.map((movie) => (
+              movie && <MovieCard key={movie.id} movie={movie} isLargeRow={true} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="rows-section">
+          <Row title="Trending Now" fetchFunction={getPopularMovies} isLargeRow={true} />
+          <Row title="Top Rated" fetchFunction={getTopRatedMovies} />
+          <Row title="Upcoming" fetchFunction={getUpcomingMovies} />
+          <Row title="Popular" fetchFunction={getPopularMovies} />
+        </div>
       )}
     </div>
   );

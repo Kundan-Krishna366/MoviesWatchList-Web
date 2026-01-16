@@ -5,20 +5,21 @@ import MovieCard from "../components/MovieCard";
 function Favourites() {
   const { favourites } = useMovieContext();
 
-  if (favourites && favourites.length > 0) {
-    return (
-      <div className="favourites-grid">
-        {favourites.map((movie) => (
-          <MovieCard movie={movie} key={movie.id} />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="favourites-empty">
-      <h2>Nothing here</h2>
-      <p>Start adding movies to your favourites and they will appear here</p>
+    <div className="favourites-page">
+      <h1 className="fav-title">My List</h1>
+      {favourites && favourites.length > 0 ? (
+        <div className="fav-grid">
+          {favourites.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} isLargeRow={true} />
+          ))}
+        </div>
+      ) : (
+        <div className="fav-empty">
+          <h2>Your list is empty</h2>
+          <p>Movies you add will appear here.</p>
+        </div>
+      )}
     </div>
   );
 }
