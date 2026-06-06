@@ -92,7 +92,7 @@ function Home() {
           >
             <div className="hero-overlay"></div>
             <div className="hero-content">
-              <div className="hero-kicker">Featured tonight</div>
+              <div className="hero-kicker"></div>
               <h1 className="hero-title">{featuredMovie.title}</h1>
               <div className="hero-meta">
                 <span>{featuredMovie.release_date?.split("-")[0] || "New"}</span>

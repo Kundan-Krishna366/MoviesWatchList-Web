@@ -37,20 +37,6 @@
   z-index: 10;
 }
 
-.hero-kicker {
-  width: fit-content;
-  margin-bottom: 16px;
-  border: 1px solid rgba(29, 185, 84, 0.42);
-  border-radius: 999px;
-  padding: 8px 13px;
-  background-color: rgba(29, 185, 84, 0.12);
-  color: #93f5b5;
-  font-size: 0.78rem;
-  font-weight: 850;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
 .hero-title {
   font-size: clamp(2.7rem, 7vw, 6.9rem);
   font-weight: 900;
