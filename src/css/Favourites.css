@@ -1,24 +1,103 @@
 .favourites-page {
-  padding: 100px 4% 50px;
+  padding: 128px clamp(16px, 4vw, 64px) 64px;
   min-height: 100vh;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(29, 185, 84, 0.14), transparent 28rem),
+    var(--bg-dark);
+}
+
+.fav-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 34px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: clamp(22px, 4vw, 38px);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(12,12,12,0.86);
+  box-shadow: 0 22px 64px rgba(0,0,0,0.28);
+}
+
+.fav-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--primary-green);
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
 }
 
 .fav-title {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 30px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 15px;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-weight: 950;
+  margin-bottom: 10px;
+}
+
+.fav-header p {
+  color: var(--text-muted);
+  font-weight: 750;
+}
+
+.fav-clear {
+  min-height: 44px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px;
+  background-color: rgba(255,255,255,0.08);
+  color: white;
+  padding: 0 18px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.fav-clear:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.32);
+  background-color: rgba(255,255,255,0.14);
 }
 
 .fav-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 28px;
 }
 
 .fav-empty {
+  display: grid;
+  place-items: center;
+  min-height: 340px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)),
+    var(--bg-panel);
   text-align: center;
-  margin-top: 50px;
   color: var(--text-muted);
+  padding: 40px 20px;
+}
+
+.fav-empty h2 {
+  color: white;
+  font-size: 1.65rem;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .favourites-page {
+    padding-top: 164px;
+  }
+
+  .fav-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .fav-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 }

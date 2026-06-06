@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useMovieContext } from "../contexts/MovieContext";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useMovieContext } from "../contexts/useMovieContext";
 import "../css/NavBar.css";
 
 function NavBar() {
   const [scrolled, setScrolled] = useState(false);
-  const { searchQuery, setSearchQuery } = useMovieContext();
+  const { favourites, searchQuery, setSearchQuery } = useMovieContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,8 +38,11 @@ function NavBar() {
           </Link>
           
           <div className="nav-links">
-            <Link to="/" className="nav-link" onClick={resetSearch}>Home</Link>
-            <Link to="/favourites" className="nav-link">My List</Link>
+            <NavLink to="/" className="nav-link" onClick={resetSearch}>Home</NavLink>
+            <NavLink to="/favourites" className="nav-link">
+              My List
+              {favourites.length > 0 && <span className="nav-count">{favourites.length}</span>}
+            </NavLink>
           </div>
         </div>
 
@@ -54,7 +57,16 @@ function NavBar() {
               placeholder="Search movies..." 
               value={searchQuery}
               onChange={handleSearch}
+              aria-label="Search movies"
             />
+            {searchQuery && (
+              <button className="search-clear" onClick={resetSearch} aria-label="Clear search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 

@@ -6,8 +6,15 @@ Users can add favourites and watch movies via VidSrc.
 ## Live Demo
 https://watchonlymovies.netlify.app/
 
+## Setup
+Create a `.env` file with your TMDB API key:
+
+```env
+VITE_TMDB_API_KEY=your_tmdb_api_key
+```
+
 ## Note
-This application currently provides the best experience on desktop and laptop browsers.
+This application is responsive across desktop, laptop, tablet, and mobile browsers.
 
 ## Features
 - Popular & search movies

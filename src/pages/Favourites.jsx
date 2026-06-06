@@ -1,13 +1,31 @@
 import "../css/Favourites.css";
-import { useMovieContext } from "../contexts/MovieContext";
+import { useMovieContext } from "../contexts/useMovieContext";
 import MovieCard from "../components/MovieCard";
 
 function Favourites() {
-  const { favourites } = useMovieContext();
+  const { favourites, clearFavourites } = useMovieContext();
+
+  const clearList = () => {
+    if (window.confirm("Clear every movie from My List?")) {
+      clearFavourites();
+    }
+  };
 
   return (
     <div className="favourites-page">
-      <h1 className="fav-title">My List</h1>
+      <header className="fav-header">
+        <div>
+          <span className="fav-eyebrow">Saved collection</span>
+          <h1 className="fav-title">My List</h1>
+          <p>{favourites.length} {favourites.length === 1 ? "movie" : "movies"} saved</p>
+        </div>
+        {favourites.length > 0 && (
+          <button className="fav-clear" onClick={clearList}>
+            Clear list
+          </button>
+        )}
+      </header>
+
       {favourites && favourites.length > 0 ? (
         <div className="fav-grid">
           {favourites.map((movie) => (

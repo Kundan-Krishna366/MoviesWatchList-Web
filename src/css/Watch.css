@@ -1,5 +1,7 @@
 .watch-page {
-  background-color: black;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(29, 185, 84, 0.12), transparent 30rem),
+    black;
   min-height: 100vh;
   color: white;
 }
@@ -8,23 +10,32 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 4%;
+  padding: 20px clamp(16px, 4vw, 64px);
   height: 80px;
-  background-color: #000;
+  background-color: rgba(0,0,0,0.86);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .back-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  color: var(--text-soft);
+  padding: 0 16px;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 }
 
 .back-btn:hover {
   color: white;
+  background-color: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.24);
 }
 
 .watch-brand {
@@ -40,7 +51,7 @@
 .player-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 4%;
+  padding: 28px clamp(16px, 4vw, 64px) 64px;
 }
 
 .video-wrapper {
@@ -50,6 +61,7 @@
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 30px;
+  border: 1px solid rgba(255,255,255,0.1);
   box-shadow: var(--shadow-lg);
 }
 
@@ -59,18 +71,54 @@
   border: none;
 }
 
+.movie-details-panel {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: clamp(18px, 3vw, 28px);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.018)),
+    rgba(10,10,10,0.92);
+  box-shadow: 0 18px 58px rgba(0,0,0,0.24);
+}
+
+.movie-details-panel.no-poster {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.watch-poster {
+  width: 100%;
+  border-radius: 7px;
+  box-shadow: 0 18px 46px rgba(0,0,0,0.42);
+}
+
+.watch-copy {
+  min-width: 0;
+}
+
 .watch-title {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 4vw, 3.7rem);
   font-weight: 900;
   margin-bottom: 15px;
 }
 
 .watch-meta {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
   color: var(--text-muted);
-  font-weight: 500;
+  font-weight: 750;
   margin-bottom: 20px;
+}
+
+.watch-meta span {
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background-color: rgba(255,255,255,0.06);
 }
 
 .meta-rating {
@@ -78,9 +126,110 @@
   font-weight: 700;
 }
 
+.watch-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.watch-genres span {
+  border: 1px solid rgba(29,185,84,0.22);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background-color: rgba(29,185,84,0.08);
+  color: #a8f4c1;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
 .watch-overview {
   color: #ccc;
   line-height: 1.6;
   max-width: 800px;
   font-size: 1.1rem;
+}
+
+.details-loading {
+  min-height: 240px;
+}
+
+.watch-poster-skeleton,
+.watch-copy-skeleton span {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #202020;
+}
+
+.watch-poster-skeleton::after,
+.watch-copy-skeleton span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+  animation: watch-sheen 1.45s infinite;
+}
+
+.watch-poster-skeleton {
+  aspect-ratio: 2/3;
+}
+
+.watch-copy-skeleton {
+  display: grid;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.watch-copy-skeleton span {
+  height: 18px;
+}
+
+.watch-copy-skeleton span:first-child {
+  width: min(560px, 85%);
+  height: 54px;
+}
+
+.watch-copy-skeleton span:nth-child(2) {
+  width: 320px;
+}
+
+.watch-copy-skeleton span:last-child {
+  width: min(720px, 95%);
+  height: 88px;
+}
+
+@keyframes watch-sheen {
+  100% { transform: translateX(100%); }
+}
+
+@media (max-width: 768px) {
+  .watch-nav {
+    height: auto;
+    min-height: 74px;
+  }
+
+  .back-btn {
+    font-size: 0.9rem;
+    padding: 0 12px;
+  }
+
+  .watch-brand {
+    font-size: 1rem;
+  }
+
+  .movie-details-panel {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .watch-title {
+    font-size: 1.5rem;
+  }
+
+  .watch-overview {
+    grid-column: 1 / -1;
+    font-size: 1rem;
+  }
 }
